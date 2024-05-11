@@ -1,0 +1,12 @@
+<!-- This is typically _form.html.erb, rendered by edit.html.erb or directly here -->
+<%= form_with model: @post, id: "edit_post_frame_#{post.id}", local: false do |form| %>
+  <div>
+    <%= form.label :title %>
+    <%= form.text_field :title, class: "w-full p-2 border rounded" %>
+  </div>
+  <div>
+    <%= form.label :content %>
+    <%= form.text_area :content, rows: 5, class: "w-full p-2 border rounded" %>
+  </div>
+  <%= form.submit "Save", class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" %>
+<% end %>

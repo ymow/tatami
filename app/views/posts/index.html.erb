@@ -1,0 +1,53 @@
+<div class="grid grid-cols-10 gap-4 p-4">
+  <% @posts.each do |post| %>
+    <div class="p-4">
+      <h2 class="text-lg font-bold"><%= post.title %></h2>
+      <p><%= post.content %></p>
+      <!-- Button to open the modal -->
+      <button class="btn" onclick="document.getElementById('edit_modal_<%= post.id %>').showModal()">Edit</button>
+
+      <!-- Modal Dialog -->
+      <dialog id="edit_modal_<%= post.id %>" class="modal" data-controller="modal">
+        <div class="modal-box">
+          <%= form_with(model: post, local: true) do |form| %>
+            <h3 class="font-bold text-lg">Editing <%= post.title %></h3>
+            <div class="py-4">
+              <%= form.label :title %>
+              <%= form.text_field :title, class: "input input-bordered w-full" %>
+            </div>
+            <div class="py-4">
+              <%= form.label :content %>
+              <%= form.text_area :content, class: "textarea textarea-bordered w-full" %>
+            </div>
+            <%= form.submit "Save", class: "btn btn-primary" %>
+            <button type="button" class="btn" onclick="document.getElementById('edit_modal_<%= post.id %>').close()">Close</button>
+          <% end %>
+        </div>
+      </dialog>
+    </div>
+  <% end %>
+
+</div>
+
+
+<script>
+    function handleSubmit(event, postId) {
+        event.preventDefault(); // Prevent the default form submission
+        const form = event.target;
+
+        fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                'X-CSRF-Token': document.querySelector("[name='csrf-token']").content
+            }
+        }).then(response => {
+            if (response.ok) {
+                document.getElementById(`edit_modal_${postId}`).close(); // Close the modal
+                window.location.reload(); // Reload the page or redirect
+            } else {
+                alert('Failed to update post');
+            }
+        }).catch(error => console.error('Error:', error));
+    }
+</script>
