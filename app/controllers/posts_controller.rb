@@ -14,16 +14,25 @@ class PostsController < ApplicationController
   end
 
   def update
+    post_dom_id = "post_#{ @post.id }" # manually constructing the DOM ID
+    post_button_dom_id = "#{post_dom_id}_button"
+
     respond_to do |format|
       if @post.update(post_params)
-        format.html { redirect_to posts_url, notice: 'Post was successfully updated.' }
-        format.json { render :show, status: :ok, location: @post }
+        format.turbo_stream {
+          render turbo_stream: [
+            turbo_stream.replace(post_dom_id, partial: 'posts/post', locals: { post: @post }),
+            turbo_stream.replace(post_button_dom_id, partial: 'posts/edit_button', locals: { post: @post })
+          ]
+        }
+        format.html { redirect_to posts_path, notice: 'Post updated successfully.' }
       else
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("#{post_dom_id}_edit", partial: 'posts/form', locals: { post: @post }) }
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
       end
     end
   end
+
 
   private
 

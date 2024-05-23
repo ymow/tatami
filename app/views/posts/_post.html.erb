@@ -1,0 +1,18 @@
+<div class="card bordered p-4 shadow-md" id="<%= dom_id(post) %>">
+  <h2 class="text-lg font-bold mb-2"><%= post.title %></h2>
+  <p class="mb-4"><%= truncate(post.content, length: 100) %></p>
+  <!-- Button triggers modal -->
+  <%= render 'posts/edit_button', post: post %>
+
+  <!-- Modal structure -->
+  <input type="checkbox" id="<%= dom_id(post, :edit_modal_toggle) %>" class="modal-toggle" />
+  <div id="<%= dom_id(post, :edit_modal) %>" class="modal">
+    <div class="modal-box relative">
+      <label for="<%= dom_id(post, :edit_modal_toggle) %>" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+      <%= turbo_frame_tag dom_id(post, :edit) do %>
+        <!-- Edit form will be loaded here -->
+        <%= render "posts/form", post: post %>
+      <% end %>
+    </div>
+  </div>
+</div>

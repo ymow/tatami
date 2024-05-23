@@ -1,12 +1,15 @@
-<!-- This is typically _form.html.erb, rendered by edit.html.erb or directly here -->
-<%= form_with model: @post, id: "edit_post_frame_#{post.id}", local: false do |form| %>
-  <div>
-    <%= form.label :title %>
-    <%= form.text_field :title, class: "w-full p-2 border rounded" %>
+<%= form_with model: post, data: { turbo_frame: dom_id(post, :edit) } do |form| %>
+  <div class="form-control">
+    <%= form.label :title, class: 'label' %>
+    <%= form.text_field :title, class: 'input input-bordered w-full' %>
   </div>
-  <div>
-    <%= form.label :content %>
-    <%= form.text_area :content, rows: 5, class: "w-full p-2 border rounded" %>
+
+  <div class="form-control mt-4">
+    <%= form.label :content, class: 'label' %>
+    <%= form.text_area :content, class: 'textarea textarea-bordered w-full' %>
   </div>
-  <%= form.submit "Save", class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" %>
+
+  <div class="modal-action">
+    <%= form.submit "Save Changes", class: 'btn btn-primary' %>
+  </div>
 <% end %>
